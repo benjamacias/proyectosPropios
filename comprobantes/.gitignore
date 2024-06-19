@@ -1,2 +1,7 @@
 # .gitignore
 clientes.xls
+certificate.csr
+*.key
+*.pem
+recibidos/*
+terminado/*

@@ -5,6 +5,8 @@ from tensorflow.keras.datasets import mnist
 from tensorflow.keras.utils import to_categorical
 import numpy as np
 import matplotlib.pyplot as plt
+from keras.preprocessing import image
+import numpy as np
 
 
 def train_and_evaluate_model(model, x_train, y_train, x_test, y_test, epochs=10, batch_size=128):
@@ -63,8 +65,41 @@ model = train_and_evaluate_model(model, x_train, y_train, x_test, y_test)
 
 # Hacer predicciones
 predictions = make_predictions(model, x_test)
+print(enumerate(predictions))
+# Recorrer todas las predicciones
+for i, prediction in enumerate(predictions):
+    # La predicción es un vector de 10 elementos debido a la capa softmax
+    # El índice del elemento más grande es la clase predicha
+    predicted_number = np.argmax(prediction)
+    print(f"Predicción para la imagen {i}: {predicted_number}")
 
 # Mostrar la primera imagen del conjunto de prueba y su predicción
-plot_image(predictions[0], y_test[0], x_test[0])
-print(predictions[0], y_test[0], x_test[0])
-plt.show()
+#plot_image(predictions[1], y_test[1], x_test[1])
+#print(f"Predicción: {np.argmax(predictions[1])}")
+#plt.show()
+
+
+# Seleccionar el primer número en el conjunto de prueba
+#print(x_test)
+
+"""
+# Cargar la imagen
+img_path = 'ruta/a/tu/imagen.png'  # Reemplaza esto con la ruta a tu imagen
+img = image.load_img(img_path, target_size=(28, 28), color_mode = "grayscale")
+
+# Convertir la imagen a un array de numpy y aplanarla
+img_array = image.img_to_array(img)
+img_array = img_array.reshape((1, -1))
+
+# Normalizar los datos de la imagen
+img_array = img_array.astype('float32') / 255
+
+# Hacer la predicción
+prediction = model.predict(img_array)
+
+# La predicción es un vector de 10 elementos debido a la capa softmax
+# El índice del elemento más grande es la clase predicha
+predicted_number = np.argmax(prediction)
+
+print(f"El número predicho es: {predicted_number}")
+"""
