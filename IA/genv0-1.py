@@ -3,7 +3,8 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Embedding, LSTM, Dense
+from tensorflow.keras.layers import Embedding, LSTM, Dense, TimeDistributed
+from keras.layers import Dropout
 
 conversations = [
     ("Hello", "Hi there!"),
@@ -35,13 +36,14 @@ input_sequences = pad_sequences(input_sequences, maxlen=max_input_len, padding='
 target_sequences = pad_sequences(target_sequences, maxlen=max_target_len, padding='post')
 
 # Model
+
 model = Sequential([
-    Embedding(vocab_size, 64, input_length=max_input_len),
+    Embedding(vocab_size, 900, input_length=max_input_len),
     LSTM(100, return_sequences=False),
     Dense(vocab_size, activation='softmax')
 ])
 
-model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer='rmsprop', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 # Convert target sequences to a shape compatible with sparse_categorical_crossentropy
 target_sequences = np.array(target_sequences)
@@ -63,7 +65,7 @@ def generate_response(input_text):
     return response
 
 # Test the chatbot
-user_input = "What's your name?"
+user_input = "How are you?"
 response = generate_response(user_input)
 print(f"User: {user_input}")
 print(f"Chatbot: {response}")
