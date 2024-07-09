@@ -5,15 +5,17 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Embedding, LSTM, Dense, MultiHeadAttention, LayerNormalization, Dropout, TimeDistributed, Bidirectional, BatchNormalization
-from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import Nadam
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from tensorflow.keras.models import load_model
 from collections import deque
+from txtalistatupla import obtenerTuplaswsp, obtenerTuplasPeli
 
 # Dataset
-conversations = [
+'''conversations = [
     ("hola", "hola, buenos días"),
-    ("hola", "buenas tardes"),
+    ("buenas", "hola, buenos días"),
+    ("puto", "Seras vos"),
     ("hola", "buenas noches"),
     ("hola", "¿cómo estás?"),
     ("bien", "Me alegro! ¿En qué puedo ayudarte?"),
@@ -34,7 +36,8 @@ conversations = [
     ("qué puedes hacer?", "Puedo ayudarte con información y responder tus preguntas. ¿En qué necesitas ayuda?"),
     ("adios","que tengas un buen día"),
     ("adios","espero que tengas un buen día"),
-]
+]'''
+conversations = obtenerTuplaswsp()
 
 # Preparar dataset
 input_texts = []
@@ -91,7 +94,7 @@ def generarModelo(vocab_size, max_len):
     # Definir el modelo
     model = Model(inputs=input_layer, outputs=output_layer)
 
-    model.compile(optimizer=Adam(learning_rate=0.001), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer=Nadam(learning_rate=0.001), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
     # Callbacks
     early_stopping = EarlyStopping(monitor='loss', patience=15, restore_best_weights=True)
@@ -206,7 +209,7 @@ if user_input != "cargar":
 else:
     # Load the model
     model = load_model('my_model3.keras')
-    history = model.fit(input_sequences, target_sequences, epochs=600, verbose=1, batch_size=32)
+    history = model.fit(input_sequences, target_sequences, epochs=600, verbose=1, batch_size=10)
     plot_training_history(history)
 
 while user_input != "adios":
